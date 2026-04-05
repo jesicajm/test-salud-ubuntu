@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Evalúa tu cobertura de salud actual y descubre si necesitas protección adicional. Quiz profesional para colombianos.">
+    <title>Evalúa tu Cobertura de Salud | Quiz Profesional Colombia</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="apple-touch-icon" href="logo.png">
+
+    <!-- Preconnect para mejorar rendimiento -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Meta Pixel Code -->
+    <script>
+        !function (f, b, e, v, n, t, s) {
+            if (f.fbq) return; n = f.fbq = function () {
+                n.callMethod ?
+                n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+            };
+            if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
+            n.queue = []; t = b.createElement(e); t.async = !0;
+            t.src = v; s = b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t, s)
+        }(window, document, 'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '1440981447587526');
+        fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+            src="https://www.facebook.com/tr?id=1440981447587526&ev=PageView&noscript=1" /></noscript>
+    <!-- End Meta Pixel Code -->
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-bg-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+        </div>
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-logo">
+                    <img src="logoSinCirculo.png" alt="Salud Ubuntu Logo" class="logo-img">
+                </div>
+                <h1 class="hero-title">¿Tu Cobertura de Salud <span class="highlight">es Suficiente?</span></h1>
+                <p class="hero-subtitle">Descubre en 3 minutos si tu EPS actual te protege adecuadamente o si necesitas
+                    complementarla con una póliza de salud</p>
+                <button class="cta-button" id="startQuiz">
+                    <span>Evaluar Mi Cobertura Ahora</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </button>
+                <div class="trust-badges">
+                    <span class="badge"><span class="badge-icon">🔒</span> 100% Confidencial</span>
+                    <span class="badge"><span class="badge-icon">⏱️</span> 3 minutos</span>
+                    <span class="badge"><span class="badge-icon">📋</span> Análisis profesional</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quiz Section -->
+    <section class="quiz-section" id="quizSection" style="display: none;">
+        <div class="container">
+            <div class="quiz-header-logo">
+                <img src="logoSinCirculo.png" alt="Logo" class="quiz-logo-img">
+            </div>
+            <div class="quiz-container">
+                <!-- Progress Bar -->
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-text">
+                    Pregunta <span id="currentQuestion">1</span> de <span id="totalQuestions">10</span>
+                </div>
+
+                <!-- Quiz Questions -->
+                <div class="quiz-content" id="quizContent">
+                    <!-- Las preguntas se cargarán dinámicamente -->
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="quiz-navigation">
+                    <button class="btn-secondary" id="prevBtn" style="display: none;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                        Anterior
+                    </button>
+                    <button class="btn-primary" id="nextBtn" style="display: none;">
+                        Siguiente
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Results Section -->
+    <section class="results-section" id="resultsSection" style="display: none;">
+        <div class="container">
+            <div class="results-container">
+                <div class="results-logo">
+                    <img src="logoSinCirculo.png" alt="Logo" class="results-logo-img">
+                </div>
+                <div class="results-header">
+                    <h2 id="resultsTitle">Tu Resultado</h2>
+                    <div class="score-circle">
+                        <svg width="200" height="200">
+                            <defs>
+                                <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#0e7c5f" />
+                                    <stop offset="100%" stop-color="#14a87a" />
+                                </linearGradient>
+                            </defs>
+                            <circle cx="100" cy="100" r="90" class="score-bg"></circle>
+                            <circle cx="100" cy="100" r="90" class="score-progress" id="scoreCircle"></circle>
+                        </svg>
+                        <div class="score-text">
+                            <span id="scorePercentage">0</span>%
+                        </div>
+                    </div>
+                </div>
+
+                <div class="results-body">
+                    <h3 id="resultsHeading">Análisis de tu Situación</h3>
+                    <div id="resultsDescription"></div>
+
+                    <h3 style="margin-top: 40px; margin-bottom: 20px;">✨ Beneficios que Podrías Obtener</h3>
+                    <div class="benefits-grid" id="benefitsGrid">
+                        <!-- Se llenarán dinámicamente -->
+                    </div>
+
+                    <div class="cta-section" id="ctaSection">
+                        <!-- Se mostrará dinámicamente -->
+                    </div>
+                </div>
+
+                <button class="btn-secondary" id="restartBtn" style="margin-top: 30px;">Volver a evaluar</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quote Form Modal -->
+    <div class="modal" id="quoteModal">
+        <div class="modal-content">
+            <button class="modal-close" id="closeModal">&times;</button>
+            
+            <!-- Form View -->
+            <div id="formView">
+                <h2>Recibe tu Asesoría Personalizada</h2>
+                <p class="modal-subtitle">Un experto en seguros de salud te contactará en menos de 24 horas</p>
+
+                <form id="quoteForm" class="quote-form">
+                    <div class="form-group">
+                        <label for="fullName">Nombre Completo *</label>
+                        <input type="text" id="fullName" name="fullName" required placeholder="Juan Pérez">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email *</label>
+                        <input type="email" id="email" name="email" required placeholder="juan@ejemplo.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Teléfono (WhatsApp) *</label>
+                        <input type="tel" id="phone" name="phone" required placeholder="3001234567">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="city">Ciudad *</label>
+                        <select id="city" name="city" required>
+                            <option value="">Selecciona tu ciudad</option>
+                            <option value="Bogotá">Bogotá</option>
+                            <option value="Medellín">Medellín</option>
+                            <option value="Cali">Cali</option>
+                            <option value="Barranquilla">Barranquilla</option>
+                            <option value="Cartagena">Cartagena</option>
+                            <option value="Bucaramanga">Bucaramanga</option>
+                            <option value="Pereira">Pereira</option>
+                            <option value="Manizales">Manizales</option>
+                            <option value="Cúcuta">Cúcuta</option>
+                            <option value="Ibagué">Ibagué</option>
+                            <option value="Santa Marta">Santa Marta</option>
+                            <option value="Villavicencio">Villavicencio</option>
+                            <option value="Otra">Otra</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="notes">¿Algo específico que quieras contarnos? (opcional)</label>
+                        <textarea id="notes" name="notes" rows="3"
+                            placeholder="Ejemplo: Me interesa conocer planes familiares, tengo una condición preexistente, etc."></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-primary btn-submit" id="submitBtn">
+                        <span class="btn-text">Solicitar Asesoría Gratuita</span>
+                        <span class="btn-loader" style="display: none;">Enviando...</span>
+                    </button>
+
+                    <p class="form-privacy">
+                        🔒 Tus datos están seguros. Al enviar este formulario, aceptas que un asesor te contacte para
+                        brindarte información sobre pólizas de salud.
+                    </p>
+                </form>
+            </div>
+
+            <!-- Success View (hidden by default) -->
+            <div id="successView" class="success-view" style="display: none;">
+                <div class="success-icon">
+                    <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+                        <circle cx="40" cy="40" r="38" stroke="#0e7c5f" stroke-width="3" fill="#0e7c5f10"/>
+                        <path d="M24 40l10 10 22-22" stroke="#0e7c5f" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" class="checkmark-path"/>
+                    </svg>
+                </div>
+                <h2 class="success-title" id="successTitle">¡Gracias!</h2>
+                <p class="success-message" id="successMessage">Tu información fue enviada correctamente. Un asesor te contactará pronto.</p>
+                <button class="btn-primary" id="successCloseBtn" style="margin-top: 24px;">Cerrar</button>
+            </div>
+
+            <!-- Error View (hidden by default) -->
+            <div id="errorView" class="error-view" style="display: none;">
+                <div class="error-icon">
+                    <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+                        <circle cx="40" cy="40" r="38" stroke="#dc3545" stroke-width="3" fill="#dc354510"/>
+                        <path d="M28 28l24 24M52 28L28 52" stroke="#dc3545" stroke-width="4" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <h2 class="error-title">Ocurrió un error</h2>
+                <p class="error-message">No pudimos enviar tu información. Por favor intenta nuevamente.</p>
+                <button class="btn-primary" id="errorRetryBtn" style="margin-top: 24px;">Intentar de nuevo</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- JavaScript -->
+    <script type="module" src="app.js"></script>
+</body>
+
+</html>
