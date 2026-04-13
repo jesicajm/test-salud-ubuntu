@@ -151,6 +151,7 @@ let currentQuestionIndex = 0;
 let userAnswers = {};
 let quizScore = 0;
 let riskProfile = {};
+let leadEventSent = false; // Evita disparar eventos de Pixel duplicados
 
 // Helper: does user have family dependents?
 function hasFamilyDependents() {
@@ -720,10 +721,6 @@ function openQuoteModal() {
     showFormView();
     quoteModal.classList.add('active');
     document.body.style.overflow = 'hidden';
-    
-    if (typeof fbq !== 'undefined') {
-        fbq('track', 'Lead');
-    }
 }
 
 function closeQuoteModal() {
@@ -816,14 +813,25 @@ async function handleQuoteSubmission(e) {
 
         console.log("✅ Lead guardado en Firestore");
 
-        if (income >= 4000000 && typeof fbq !== 'undefined') {
-            fbq('track', 'SubmitApplication', {
-                value: income,
-                currency: 'COP',
+        // Solo disparar eventos de Pixel si no se han enviado antes en esta sesión
+        if (!leadEventSent && typeof fbq !== 'undefined') {
+            fbq('track', 'Lead', {
                 quiz_score: quizScore,
                 risk_level: riskProfile.level,
                 eventID: eventId
             });
+
+            if (income >= 4000000) {
+                fbq('track', 'SubmitApplication', {
+                    value: income,
+                    currency: 'COP',
+                    quiz_score: quizScore,
+                    risk_level: riskProfile.level,
+                    eventID: eventId
+                });
+            }
+
+            leadEventSent = true; // No volver a disparar aunque reenvíe el formulario
         }
 
         // Show in-page success message instead of alert
@@ -847,6 +855,7 @@ function restartQuiz() {
     userAnswers = {};
     quizScore = 0;
     riskProfile = {};
+    leadEventSent = false;
     
     resultsSection.style.display = 'none';
     heroSection.style.display = 'flex';

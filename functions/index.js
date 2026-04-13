@@ -114,4 +114,75 @@ exports.sendLeadToMeta = onDocumentCreated(
   }
 );
 
+/* ============================================================
+   📌 ENVIAR LEADS DE SALUD A GOOGLE SHEETS
+   🔥 Cuando se crea/actualiza un documento en "leads"
+   ============================================================ */
 
+const { onDocumentWritten } = require("firebase-functions/v2/firestore");
+
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyVVDRt4lIU8Q7g6-0QQmrP60xLw2VRFUske5A41ZWV87-p0Ts5-dIfo-aIpuPr9Og/exec";
+
+exports.enviarLeadSaludASheets = onDocumentWritten(
+  {
+    document: "leads/{leadId}",
+    region: "us-central1"
+  },
+  async (event) => {
+    if (!event.data.after.exists) {
+      console.log("Documento eliminado, ignorando.");
+      return;
+    }
+
+    const data = event.data.after.data();
+    const leadId = event.params.leadId;
+
+    if (data.sentToSheets) {
+      console.log(`Lead ${leadId} ya fue enviado a Sheets.`);
+      return;
+    }
+
+    const payload = {
+      fecha: new Date().toLocaleString("es-CO", { timeZone: "America/Bogota" }),
+      nombreCompleto: data.fullName || "",
+      nombre: data.firstName || "",
+      apellido: data.lastName || "",
+      email: data.email || "",
+      telefono: data.phone || "",
+      ciudad: data.city || "",
+      ingresoMensual: data.ingresoMensual || 0,
+      rangoIngreso: data.incomeBracket || "",
+      cualificado: data.isQualified ? "Sí" : "No",
+      quizScore: data.quizScore || 0,
+      nivelRiesgo: data.riskLevel || "",
+      notas: data.notes || "",
+      fuente: data.source || "",
+      edad: data.quizAnswers?.[1] || "",
+      eps: data.quizAnswers?.[3] || "",
+      tiempoEspecialista: data.quizAnswers?.[4] || "",
+      libertadEleccion: data.quizAnswers?.[5] || "",
+      habitacion: data.quizAnswers?.[6] || "",
+      gastosHospitalarios: data.quizAnswers?.[7] || "",
+      tiempoExamenes: data.quizAnswers?.[8] || "",
+      condicionPreexistente: data.quizAnswers?.[9] || "",
+      familiares: data.quizAnswers?.[10] || ""
+    };
+
+    try {
+      const response = await fetch(GOOGLE_SCRIPT_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      if (response.ok) {
+        console.log(`✅ Lead ${leadId} enviado a Google Sheets.`);
+        await event.data.after.ref.update({ sentToSheets: true });
+      } else {
+        console.error(`❌ Error HTTP ${response.status} al enviar lead ${leadId}.`);
+      }
+    } catch (error) {
+      console.error(`❌ Error enviando lead ${leadId} a Sheets:`, error);
+    }
+  }
+);
